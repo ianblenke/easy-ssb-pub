@@ -2,7 +2,10 @@ FROM buildpack-deps:xenial
 
 RUN groupadd -r node && useradd -r -g node node
 
-RUN echo "deb http://archive.ubuntu.com/ubuntu xenial main universe" >> /etc/apt/sources.list
+# Support docker architectures other than x86_64
+RUN uname -p | grep x86_64 \
+      && echo "deb http://archive.ubuntu.com/ubuntu xenial main universe" >> /etc/apt/sources.list \
+      || echo "deb http://ports.ubuntu.com/ubuntu-ports xenial main universe" >> /etc/apt/sources.list
 RUN apt-get update
 RUN apt-get upgrade -y
 
