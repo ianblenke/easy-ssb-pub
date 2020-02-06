@@ -35,4 +35,4 @@ EXPOSE 80
 EXPOSE 8008
 EXPOSE 8007
 
-CMD . $HOME/.nvm/nvm.sh && npm start
+CMD ./run.sh
