@@ -17,19 +17,30 @@ RUN git clone https://github.com/jedisct1/libsodium.git \
  && make check \
  && make install
 
-ENV NPM_CONFIG_LOGLEVEL=info NODE_VERSION=8.10.0 HOME=/home/node
-RUN groupadd -r node && useradd -r -g node -d ${HOME} -m node
-WORKDIR /home/node
+ENV NPM_CONFIG_LOGLEVEL=info NODE_VERSION=8.10.0 HOME=/root
+
+WORKDIR ${HOME}
 
 RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.1/install.sh | bash
-ENV NVM_DIR $HOME/.nvm
-RUN . $HOME/.nvm/nvm.sh && nvm install $NODE_VERSION && nvm alias default $NODE_VERSION
+ENV NVM_DIR=$HOME/.nvm
+RUN . $NVM_DIR/nvm.sh \
+ && nvm install $NODE_VERSION \
+ && nvm alias default $NODE_VERSION \
+ && mkdir app
 
 WORKDIR app/
+
 COPY package-lock.json .
 COPY package.json .
-RUN . $HOME/.nvm/nvm.sh && npm i
+RUN . $HOME/.nvm/nvm.sh \
+ && npm install
 COPY . .
+
+RUN mkdir ${HOME}/.ssb
+
+USER root
+
+VOLUME ${HOME}/.ssb
 
 EXPOSE 80
 EXPOSE 8008

@@ -14,7 +14,7 @@ services:
       - "8008:8008"
       - "8007:8007"
     volumes:
-      - easy-ssb-pub:/root/.ssb
+      - easy-ssb-pub:/home/node/.ssb
     container_name: easy-ssb-pub
     mem_limit: 450M
     restart: unless-stopped
